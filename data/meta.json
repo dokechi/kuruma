@@ -1,0 +1,8 @@
+{
+  "title": "レンタカー台帳ダッシュボード",
+  "repoMode": "github-pages-root",
+  "source": "sample-seeded-from-uploaded-ledger",
+  "refreshedAt": "2026-04-10T00:00:00+09:00",
+  "sheetLinked": false,
+  "notes": "最初の表示確認用にサンプルJSONを同梱。連動を有効化すると data/*.json が上書きされます。"
+}
