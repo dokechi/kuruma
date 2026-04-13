@@ -260,24 +260,21 @@
   }
 
   function renderRows(list) {
-    if (!list.length) {
-      return `<tr><td colspan="10" class="empty">条件に合う車両がありません。</td></tr>`;
-    }
-    return list.map(v => `
-      <tr>
-        <td>${safeText(v.id)}</td>
-        <td>${fmtDate(v.purchaseDate)}</td>
-        <td>${safeText(v.name)}</td>
-        <td>${safeText(v.chassisNo)}</td>
-        <td>${safeText(v.registrationNo)}</td>
-        <td>${safeText(v.saleTo)}</td>
-        <td class="money">${v.currentMonthly ? fmtMoney(v.currentMonthly) : "—"}</td>
-        <td class="money">${v.purchaseAmount ? fmtMoney(v.purchaseAmount) : "—"}</td>
-        <td class="money">${v.saleAmount ? fmtMoney(v.saleAmount) : "—"}</td>
-        <td><span class="tag ${statusClass(v.status)}">${safeText(v.status)}</span></td>
-      </tr>
-    `).join("");
+  if (!list.length) {
+    return `<tr><td colspan="7" class="empty">条件に合う車両がありません。</td></tr>`;
   }
+  return list.map(v => `
+    <tr>
+      <td>${safeText(v.id)}</td>
+      <td>${fmtDate(v.purchaseDate)}</td>
+      <td>${safeText(v.name)}</td>
+      <td class="money">${v.currentMonthly ? fmtMoney(v.currentMonthly) : "—"}</td>
+      <td class="money">${v.purchaseAmount ? fmtMoney(v.purchaseAmount) : "—"}</td>
+      <td class="money">${v.saleAmount ? fmtMoney(v.saleAmount) : "—"}</td>
+      <td><span class="tag ${statusClass(v.status)}">${safeText(v.status)}</span></td>
+    </tr>
+  `).join("");
+}
 
   function renderClosedList(list) {
     if (!list.length) {
