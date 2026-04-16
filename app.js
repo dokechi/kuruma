@@ -244,47 +244,70 @@
     });
   }
 
-  function renderCards() {
-    const s = state.summary;
-    const cards = [
-      { label: "総台数", value: `${s.totalVehicles || 0}台`, note: "レンタル + 売買" },
-      { label: "稼働中", value: `${s.activeCount || 0}台`, note: "現在貸出・保有中" },
-      { label: "売却済", value: `${s.soldCount || 0}台`, note: "売買でクローズ済み" },
-      { label: "廃車 / 要確認", value: `${(s.scrappedCount || 0) + (s.needsReviewCount || 0)}台`, note: "廃車・未整理含む" },
-      { label: "現行月額合計", value: fmtMoney(s.currentMonthlySum), note: "稼働中車両の月額合計" },
-      { label: "累計仕入", value: fmtMoney(s.totalPurchase), note: "公開タブベース" },
-      { label: "累計売上", value: fmtMoney(s.totalSale), note: "売却額の合計" },
-      { label: "累計売却益", value: fmtMoney(s.totalProfit), note: "利益の単純合計" },
-    ];
-    return cards.map(c => `
-      <div class="card">
-        <h3>${c.label}</h3>
-        <div class="value">${c.value}</div>
-        <small>${c.note}</small>
-      </div>
-    `).join("");
+function renderCards() {
+  const s = state.summary;
+  const cards = [
+    { label: "総台数", value: `${s.totalVehicles || 0}台`, note: "レンタル + 売買" },
+    { label: "稼働中", value: `${s.activeCount || 0}台`, note: "現在貸出・保有中" },
+    { label: "売却済", value: `${s.soldCount || 0}台`, note: "売買でクローズ済み" },
+    { label: "廃車 / 要確認", value: `${(s.scrappedCount || 0) + (s.needsReviewCount || 0)}台`, note: "廃車・未整理含む" },
+    { label: "現行月額合計", value: fmtMoney(s.currentMonthlySum), note: "稼働中車両の月額合計" },
+    { label: "累計仕入", value: fmtMoney(s.totalPurchase), note: "公開タブベース" },
+    { label: "累計売上", value: fmtMoney(s.totalSale), note: "売却額の合計" },
+    { label: "累計売却益", value: fmtMoney(s.totalProfit), note: "利益の単純合計" },
+  ];
+  return cards.map(c => `
+    <div class="card">
+      <h3>${c.label}</h3>
+      <div class="value">${c.value}</div>
+      <small>${c.note}</small>
+    </div>
+  `).join("");
+}
+
+function renderNameMeta(v) {
+  const lines = [];
+
+  if (Number(v.purchaseAmount || 0) > 0) {
+    lines.push(`取得 ${fmtMoney(v.purchaseAmount)}`);
   }
 
-  function renderRows(list) {
-    if (!list.length) {
-      return `<tr><td colspan="8" class="empty">条件に合う車両がありません。</td></tr>`;
-    }
-    return list.map(v => `
-      <tr>
-        <td>${safeText(v.id)}</td>
-        <td>${fmtDate(v.purchaseDate)}</td>
-        <td>
-          <div class="cell-title">${safeText(v.name)}</div>
-          ${v.repairMisc ? `<div class="cell-sub">修理雑費 ${fmtMoney(v.repairMisc)}</div>` : ''}
-        </td>
-        <td class="money">${v.currentMonthly ? fmtMoney(v.currentMonthly) : "—"}</td>
-        <td class="money">${v.purchaseAmount ? fmtMoney(v.purchaseAmount) : "—"}</td>
-        <td class="money">${v.saleAmount ? fmtMoney(v.saleAmount) : "—"}</td>
-        <td class="money">${v.insurance ? fmtMoney(v.insurance) : "—"}</td>
-        <td><span class="tag ${statusClass(v.status)}">${safeText(v.status)}</span></td>
-      </tr>
-    `).join("");
+  if (Number(v.insurance || 0) > 0) {
+    lines.push(`保険 ${fmtMoney(v.insurance)}`);
   }
+
+  if (Number(v.repairMisc || 0) > 0) {
+    lines.push(`修理 ${fmtMoney(v.repairMisc)}`);
+  }
+
+  if (!lines.length) return '';
+
+  return `
+    <div class="cell-meta">
+      ${lines.map(line => `<div class="cell-sub">${line}</div>`).join('')}
+    </div>
+  `;
+}
+
+function renderRows(list) {
+  if (!list.length) {
+    return `<tr><td colspan="6" class="empty">条件に合う車両がありません。</td></tr>`;
+  }
+
+  return list.map(v => `
+    <tr>
+      <td>${safeText(v.id)}</td>
+      <td>${fmtDate(v.purchaseDate)}</td>
+      <td>
+        <div class="cell-title">${safeText(v.name)}</div>
+        ${renderNameMeta(v)}
+      </td>
+      <td class="money">${v.currentMonthly ? fmtMoney(v.currentMonthly) : "—"}</td>
+      <td class="money">${v.saleAmount ? fmtMoney(v.saleAmount) : "—"}</td>
+      <td><span class="tag ${statusClass(v.status)}">${safeText(v.status)}</span></td>
+    </tr>
+  `).join("");
+}
 
   function renderClosedList(list) {
     if (!list.length) {
