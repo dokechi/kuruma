@@ -1,60 +1,114 @@
- (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
-diff --git a/index.html b/index.html
-index 46ff3dee4df5b150d922bc484ccbbbae8c8f44c5..3471c34b63858fa1850e5e09a7561509c3296a83 100644
---- a/index.html
-+++ b/index.html
-@@ -50,50 +50,51 @@
-         <select id="categoryFilter">
-           <option value="all">区分: すべて</option>
-           <option value="rental">区分: レンタル</option>
-           <option value="trade">区分: 売買</option>
-         </select>
-         <button id="resetBtn" class="primary">リセット</button>
-       </div>
- 
-       <div class="table-wrap" style="margin-top:14px">
-         <table>
-           <thead>
-             <tr>
-               <th>ID</th>
-               <th>購入日</th>
-               <th>名前</th>
-               <th>現行月額</th>
-               <th>売却</th>
-               <th>状態</th>
-             </tr>
-           </thead>
-           <tbody id="vehicleRows">
-             <tr><td colspan="6" class="empty">読み込み中...</td></tr>
-           </tbody>
-         </table>
-       </div>
-+      <div class="mobile-list" id="vehicleMobileList"></div>
-     </section>
- 
-     <section class="grid2">
-       <section class="panel">
-         <div class="panel-head">
-           <div>
-             <h2>クローズ済み</h2>
-             <p>売却済み / 廃車の新しい順</p>
-           </div>
-         </div>
-         <div class="list" id="closedList"></div>
-       </section>
- 
-       <section class="panel">
-         <div class="panel-head">
-           <div>
-             <h2>月額上位</h2>
-             <p>稼働中の現行月額</p>
-           </div>
-         </div>
-         <div class="list" id="monthlyList"></div>
-       </section>
-     </section>
- 
-     <div class="footer">
- 
-EOF
-)
+<!doctype html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>レンタカー台帳ダッシュボード</title>
+  <meta name="description" content="レンタカー台帳の静的ダッシュボード。GitHub Pages でそのまま表示できます。">
+  <link rel="stylesheet" href="./styles.css">
+</head>
+<body>
+  <main class="page">
+    <section class="hero">
+      <div class="shape s1"></div>
+      <div class="shape s2"></div>
+      <div class="shape s3"></div>
+      <div class="shape s4"></div>
+
+      <span class="badge">GitHub Pages / JSON</span>
+      <h1 id="pageTitle">レンタカー台帳ダッシュボード</h1>
+      <p>台数、状態、月額、売却の状況を一覧で確認できます。data フォルダの JSON を差し替えるだけで更新できます。</p>
+
+      <div class="meta-row">
+        <span id="metaInfo">読み込み中...</span>
+      </div>
+    </section>
+
+    <section class="cards" id="summaryCards">
+      <article class="card"><h3>総台数</h3><div class="value">—</div><small>読み込み中</small></article>
+      <article class="card"><h3>稼働中</h3><div class="value">—</div><small>読み込み中</small></article>
+      <article class="card"><h3>売却済</h3><div class="value">—</div><small>読み込み中</small></article>
+      <article class="card"><h3>月額合計</h3><div class="value">—</div><small>読み込み中</small></article>
+    </section>
+
+    <section class="notice">
+      <strong>メモ</strong>
+      <div id="noticeText">読み込み中...</div>
+    </section>
+
+    <section class="panel">
+      <div class="panel-head">
+        <div>
+          <h2>車両一覧</h2>
+          <p><span id="resultCount">0件</span> を表示中</p>
+        </div>
+      </div>
+
+      <div class="toolbar">
+        <input id="searchInput" class="input" type="search" placeholder="名前 / ID / 登録番号 / 車体番号 で検索">
+        <select id="statusFilter">
+          <option value="all">状態: すべて</option>
+          <option value="稼働中">状態: 稼働中</option>
+          <option value="売却済">状態: 売却済</option>
+          <option value="廃車">状態: 廃車</option>
+          <option value="要確認">状態: 要確認</option>
+        </select>
+        <select id="categoryFilter">
+          <option value="all">区分: すべて</option>
+          <option value="rental">区分: レンタル</option>
+          <option value="trade">区分: 売買</option>
+        </select>
+        <button id="resetBtn" class="primary" type="button">リセット</button>
+      </div>
+
+      <div class="table-wrap" style="margin-top:14px">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>購入日</th>
+              <th>名前</th>
+              <th>現行月額</th>
+              <th>売却</th>
+              <th>状態</th>
+            </tr>
+          </thead>
+          <tbody id="vehicleRows">
+            <tr><td colspan="6" class="empty">読み込み中...</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mobile-list" id="vehicleMobileList"></div>
+    </section>
+
+    <section class="grid2">
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>クローズ済み</h2>
+            <p>売却済み / 廃車の新しい順</p>
+          </div>
+        </div>
+        <div class="list" id="closedList"></div>
+      </section>
+
+      <section class="panel">
+        <div class="panel-head">
+          <div>
+            <h2>月額上位</h2>
+            <p>稼働中の現行月額</p>
+          </div>
+        </div>
+        <div class="list" id="monthlyList"></div>
+      </section>
+    </section>
+
+    <div class="footer">
+      静的 HTML / CSS / JavaScript だけで動作します。GitHub Pages の root 構成でもサブパス構成でも動くように相対パスで参照しています。
+    </div>
+  </main>
+
+  <script defer src="./app.js"></script>
+</body>
+</html>

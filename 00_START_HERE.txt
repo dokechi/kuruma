@@ -1,19 +1,11 @@
-最初はこれだけ見ればOKです。
+これが修正版です。
 
-1. いまの GitHub リポジトリの中身を全部削除
-2. この ZIP を解凍
-3. 解凍して出てきた「親フォルダ」を開く
-4. その中のファイルとフォルダを全部選択
-5. GitHub の upload 画面にドラッグ
-6. commit
-7. Settings → Pages
-   - Source: Deploy from a branch
-   - Branch: main
-   - Folder: /(root)
-8. https://dokechi.github.io/kuruma/ を開く
+元の ZIP は index.html / app.js / styles.css が差分ファイルになっていたため、そのままでは動きませんでした。
 
-重要:
-- 親フォルダごとドラッグしない
-- ファイル名は index.html のまま
-- まずは表示だけ確認
-- スプシ連動はあとからでOK
+やること:
+1. この ZIP を解凍
+2. 親フォルダではなく中身だけを GitHub にアップロード
+3. Settings → Pages → main / /(root)
+4. 表示確認
+
+まずは data フォルダ込みで静的表示ができればOKです。
