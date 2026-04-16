@@ -1,9 +1,9 @@
  (cd "$(git rev-parse --show-toplevel)" && git apply --3way <<'EOF' 
 diff --git a/app.js b/app.js
-index a3c2278a2e163f655c6090f3ebe139568cfa27c4..25b3e1e33a4641408a414daa1d8223876477dfb9 100644
+index a3c2278a2e163f655c6090f3ebe139568cfa27c4..299c3734047bf476b2b843cea2f019d3eea46758 100644
 --- a/app.js
 +++ b/app.js
-@@ -284,97 +284,126 @@ function renderNameMeta(v) {
+@@ -284,97 +284,132 @@ function renderNameMeta(v) {
  
    return `
      <div class="cell-meta">
@@ -103,8 +103,15 @@ index a3c2278a2e163f655c6090f3ebe139568cfa27c4..25b3e1e33a4641408a414daa1d822387
  
      document.getElementById("summaryCards").innerHTML = renderCards();
      document.getElementById("resultCount").textContent = `${filtered.length}件`;
-     document.getElementById("vehicleRows").innerHTML = renderRows(filtered);
-+    document.getElementById("vehicleMobileList").innerHTML = renderMobileRows(filtered);
+-    document.getElementById("vehicleRows").innerHTML = renderRows(filtered);
++    const tableRowsEl = document.getElementById("vehicleRows");
++    if (tableRowsEl) {
++      tableRowsEl.innerHTML = renderRows(filtered);
++    }
++    const mobileListEl = document.getElementById("vehicleMobileList");
++    if (mobileListEl) {
++      mobileListEl.innerHTML = renderMobileRows(filtered);
++    }
      document.getElementById("closedList").innerHTML = renderClosedList(closed);
      document.getElementById("monthlyList").innerHTML = renderMonthlyList(state.vehicles);
  
