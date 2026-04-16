@@ -77,3 +77,15 @@ tbody tr:hover{background:#fafafa}
   .shape.s2{width:160px;height:160px}
   .shape.s3{width:82px;height:82px;right:90px}
 }
+.cell-meta {
+  margin-top: 4px;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+}
+
+.cell-sub {
+  font-size: 12px;
+  line-height: 1.35;
+  opacity: 0.8;
+}
